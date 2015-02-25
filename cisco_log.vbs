@@ -10,14 +10,18 @@ Sub Main
   ' turn on synchronous mode so we don't miss any data
   crt.Screen.Synchronous = True
   Dim bStartLog, bAppendToLog
-  logfile = crt.Dialog.Prompt("Logfile name", "Capture Completion Notice Info", "C:\Running_Capture\Script_Completion_Log.log", False)
-  crt.Session.LogFileName = logfile
-  'crt.Session.LogFileName = "C:\Running_Capture\%Y-%M-%D--%h-%m-%s.%t-%S(%H).txt"
   crt.session.log True, True
  
-  'crt.Session.Log True
   crt.Screen.Send "!-----Begin---" & VbCr
   crt.Screen.WaitForString "#"
+  
+  'This will grab the hostname and use it to save the log file
+  Set objTab = crt.GetScriptTab()
+  nRow = objTab.Screen.CurrentRow
+  hostname = objTab.screen.Get(nRow, 0, nRow, objTab.Screen.CurrentColumn - 2)
+  hostname = Trim(hostname)
+  
+  crt.Session.LogFileName = ("C:\Running_Capture\"& hostname & ".txt")
   crt.Screen.Send "term length 0" & VbCr
   crt.Screen.WaitForString "#"
   crt.Screen.Send "!" & VbCr
